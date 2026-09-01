@@ -2,6 +2,7 @@
 import streamlit as st
 
 def inyectar_estilos_css():
+    """Inyecta CSS avanzado para efectos hover, sombras y botones modernos."""
     estilo = """
     <style>
         :root {
@@ -9,94 +10,83 @@ def inyectar_estilos_css():
             --color-primary: #004d40;
             --color-secondary-light: #10bfaa;
             --color-secondary: #00695c;
-            --color-secondary-dark: #004d43;
             --color-accent-light: #b34d00;
-            --color-accent: #4d2100;
             --color-warning: #e8ba30;
             --color-background: #ffffff;
             --color-surface: #fafafa;
             --color-text-primary: #181b1a;
             --color-text-secondary: #616b69;
-            --color-text-disabled: #a1aaa9;
         }
 
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-        
-        .stApp { background-color: var(--color-surface); }
+        /* Fondo y tipografía general */
+        .stApp {
+            background-color: var(--color-surface);
+            color: var(--color-text-primary);
+        }
 
-        .card-resultado {
+        /* 1. Modernización de Botones Nativos de Streamlit */
+        .stButton > button {
+            background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(0, 77, 64, 0.2);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .stButton > button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 77, 64, 0.3);
+            border-color: transparent;
+            color: white;
+        }
+
+        .stButton > button:active {
+            transform: translateY(1px);
+        }
+
+        /* 2. Tarjetas de Resultados con Hover Effects */
+        .card-premium {
             background-color: var(--color-background);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             border-left: 6px solid var(--color-primary-light);
             margin-bottom: 20px;
-            transition: transform 0.2s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
-        .card-resultado:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+        .card-premium:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
-
+        
         .card-titulo {
             color: var(--color-text-secondary);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
-            font-weight: 600;
-            margin-bottom: 5px;
+            font-weight: 700;
         }
-
+        
         .card-valor {
             color: var(--color-primary);
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 800;
-            line-height: 1.2;
-            margin: 0;
-        }
-        
-        .card-unidad { font-size: 0.4em; color: var(--color-text-disabled); vertical-align: text-bottom; }
-        
-        .semaforo-container {
-            border-radius: 8px; padding: 15px 20px; display: flex; align-items: center; 
-            justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-            color: white; margin-top: 15px; margin-bottom: 20px;
+            line-height: 1.1;
         }
     </style>
     """
     st.markdown(estilo, unsafe_allow_html=True)
 
-def mostrar_header_seccion(titulo: str, descripcion: str):
+def mostrar_tarjeta(titulo: str, valor: float, unidad: str, color_borde: str = "var(--color-primary-light)"):
+    """Renderiza una tarjeta HTML/CSS interactiva para mostrar métricas clave."""
     html = f"""
-    <div style="margin-bottom: 25px; padding-bottom: 10px; border-bottom: 2px solid var(--color-secondary-light);">
-        <h2 style="color: var(--color-primary); margin-bottom: 5px; font-weight: 800;">{titulo}</h2>
-        <p style="color: var(--color-text-secondary); margin: 0; font-size: 1.1rem;">{descripcion}</p>
-    </div>
-    """
-    st.markdown(html, unsafe_allow_html=True)
-
-def mostrar_tarjeta_resultado(titulo: str, valor: float, unidad: str, borde_color: str = "var(--color-primary-light)"):
-    html = f"""
-    <div class="card-resultado" style="border-left-color: {borde_color};">
+    <div class="card-premium" style="border-left-color: {color_borde};">
         <div class="card-titulo">{titulo}</div>
-        <div class="card-valor">{valor:,.2f} <span class="card-unidad">{unidad}</span></div>
-    </div>
-    """
-    st.markdown(html, unsafe_allow_html=True)
-
-def mostrar_semaforo_ipr(potencial: float):
-    if potencial < 50: color, estado, icono = "var(--color-primary-light)", "Operación Conservadora", "🛡️"
-    elif 50 <= potencial <= 80: color, estado, icono = "var(--color-warning)", "Operación Óptima", "⚡"
-    else: color, estado, icono = "var(--color-accent-light)", "Riesgo Inminente", "⚠️"
-        
-    html = f"""
-    <div class="semaforo-container" style="background-color: {color};">
-        <div>
-            <div style="font-size: 0.9em; text-transform: uppercase;">Diagnóstico IPR</div>
-            <div style="font-size: 1.2em; font-weight: bold;">{icono} {estado}</div>
-        </div>
-        <div style="font-size: 2.5em; font-weight: 800;">{potencial:.1f}%</div>
+        <div class="card-valor">{valor:,.2f} <span style="font-size: 0.4em; color: var(--color-text-secondary);">{unidad}</span></div>
     </div>
     """
     st.markdown(html, unsafe_allow_html=True)
