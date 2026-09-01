@@ -6,6 +6,7 @@ def calcular_ipr_completo(modelo: ModeloProduccionIPR) -> dict:
     qb = modelo.j * (modelo.pr - modelo.pb)
     qo_max = qb + (modelo.j * modelo.pb) / 1.8
     
+    # Selección de régimen de flujo
     if modelo.pwf >= modelo.pb:
         qo = modelo.j * (modelo.pr - modelo.pwf)
     else:
@@ -20,9 +21,10 @@ def calcular_ipr_completo(modelo: ModeloProduccionIPR) -> dict:
         "drawdown_total": modelo.pr - modelo.pwf,
         "drawdown_critico": modelo.pr - modelo.pb,
         "ratio_eficiencia": (modelo.pr - modelo.pwf) / modelo.pr,
-        "potencial": (qo / qo_max) * 100
+        "potencial": (qo / qo_max) * 100 if qo_max > 0 else 0
     }
     
+    # Cálculo del problema inverso
     if modelo.qo_objetivo is not None:
         if modelo.qo_objetivo <= qb:
             pwf_requerida = modelo.pr - (modelo.qo_objetivo / modelo.j)
