@@ -13,7 +13,10 @@ def generar_datos_curva_ipr(modelo: ModeloProduccionIPR, num_puntos: int = 50) -
         res = calcular_ipr_completo(mod_temp)
         caudales.append(res["qo"])
         
-    return pd.DataFrame({"Presion_Fondo_Pwf_psi": pwf_array, "Caudal_Qo_STBd": caudales})
+    return pd.DataFrame({
+        "Presion_Fondo_Pwf_psi": pwf_array, 
+        "Caudal_Qo_STBd": caudales
+    })
 
 def preparar_datos_poes_grafico(poes: float, recuperable: float) -> pd.DataFrame:
     return pd.DataFrame({
