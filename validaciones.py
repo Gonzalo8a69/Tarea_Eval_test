@@ -20,7 +20,13 @@ def validar_perforacion_hidrostatica(mw: float, md: float, tvd: float, pform: fl
 
 def validar_reservorios_poes(area: float, h: float, ntg: float, porosidad: float, swi: float, boi: float, fr: float) -> tuple[bool, str]:
     if area <= 0 or h <= 0 or boi <= 0:
-        return False, "Área, espesor y Boi deben ser mayores a cero."
+        return False, "Área, espesor bruto y Boi deben ser mayores a cero."
+    
+    fracciones = {"NTG": ntg, "Porosidad": porosidad, "Swi": swi, "Factor de Recobro": fr}
+    for nombre, valor in fracciones.items():
+        if not (0 <= valor <= 1):
+            return False, f"El parámetro {nombre} debe ingresarse como fracción (entre 0 y 1)."
+    return True, "Válido"
     
     fracciones = {"NTG": ntg, "Porosidad": porosidad, "Swi": swi, "Factor de Recobro": fr}
     for nombre, valor in fracciones.items():
